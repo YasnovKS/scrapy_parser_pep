@@ -5,10 +5,6 @@ from pep_parse.settings import BASE_DIR
 
 class PepParsePipeline:
 
-    def __init__(self):
-        self.result_dir = BASE_DIR / 'results'
-        self.result_dir.mkdir(exist_ok=True)
-
     def open_spider(self, spider):
         self.statuses = dict()
 
@@ -18,9 +14,11 @@ class PepParsePipeline:
         return item
 
     def close_spider(self, spider):
+        result_dir = BASE_DIR / 'results'
+        result_dir.mkdir(exist_ok=True)
         time_pattern = ('%Y-%m-%d_%H-%M-%S')
         time_now = dt.now().strftime(time_pattern)
-        filename = BASE_DIR / f'results/status_summary_{time_now}.csv'
+        filename = f'{result_dir}/status_summary_{time_now}.csv'
 
         with open(filename, mode='w', encoding='utf-8') as file:
             file.write('Статус,Количество\n')
